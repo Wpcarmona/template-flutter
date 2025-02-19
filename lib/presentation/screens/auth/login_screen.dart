@@ -57,14 +57,7 @@ class _FormContent extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          'Iniciar sesion',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 24,
-            height: 0.9,
-          ),
-        ),
+        const CustomTitle(text: 'Iniciar Sesión'),
         SizedBox(height: 20),
         CustomTextFormField(
           label: 'Correo',
@@ -133,7 +126,7 @@ class _RegisterButton extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              context.push('/auth/register');
+              context.go('/auth/register');
             },
             child: const Text(
               'Registrate',

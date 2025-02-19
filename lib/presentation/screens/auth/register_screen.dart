@@ -4,6 +4,7 @@ import 'package:app_template/presentation/cubit/register/register_cubit.dart';
 import 'package:app_template/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const name = 'register-screen';
@@ -121,8 +122,11 @@ class _RegisterViewState extends State<_RegisterView> {
                     onPressed: () {
                       if (formsStep == 2) {
                         setState(() {
-                          formsStep--;
+                          formsStep--; 
                         });
+                      } else if (formsStep == 1) {
+                        context.go(
+                            '/auth/login'); 
                       }
                     },
                   ),
