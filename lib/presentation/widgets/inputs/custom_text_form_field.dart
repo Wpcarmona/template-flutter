@@ -30,22 +30,25 @@ class CustomTextFormField extends StatelessWidget {
       obscureText: obscureText,
       keyboardType: keyboardType,
       decoration: InputDecoration(
-        filled: true, 
-        fillColor: Colors.white, 
-        enabledBorder: border.copyWith(
-        borderSide: BorderSide(color: colors.primary, width: 1)),
-        focusedBorder: border.copyWith( borderSide: BorderSide(color: colors.secondary, width: 1),),
-        errorBorder: border.copyWith(borderSide: BorderSide(color: colors.error, width: 1),),
-        focusedErrorBorder: border.copyWith(borderSide: BorderSide(color: colors.error, width: 1),),
-        isDense: false, 
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 15,   
-        ),
-        label: label != null ? Text(label!) : null,
+        labelText: label,
         hintText: hint,
-        errorText: errorMessage,
-        focusColor: colors.primary,
+        errorText: errorMessage, // Estilo del label
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey, width: 1.5), // Solo línea inferior
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: colors.primary, width: 2), // Borde activo
+        ),
+        errorBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: colors.error, width: 1.5), // Borde en caso de error
+        ),
+        focusedErrorBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: colors.error, width: 2), // Borde al enfocar en error
+        ),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: 0, // Se alinea mejor con el borde
+          vertical: 10,
+        ),
       ),
     );
   }

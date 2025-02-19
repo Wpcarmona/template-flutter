@@ -18,7 +18,7 @@ class CusstomButtonField extends StatelessWidget {
         backgroundColor: colors.primary,
         padding: const EdgeInsets.symmetric(vertical: 15),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(50),
         ),
       ),
       onPressed: onPressed,

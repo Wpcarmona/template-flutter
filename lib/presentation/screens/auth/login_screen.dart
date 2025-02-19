@@ -1,4 +1,3 @@
-import 'package:app_template/presentation/widgets/buttons/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -12,7 +11,9 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(create: (context) => LoginCubit(), child: _LoginPage());
+    return BlocProvider(
+      create: (context) => LoginCubit(), 
+      child: _LoginPage());
   }
 }
 
@@ -95,7 +96,10 @@ class _FormContent extends StatelessWidget {
         SizedBox(height: 10),
         CusstomButtonField(
           text: 'Ingresar', 
-          onPressed: loginCubit.onSubmit),
+          onPressed: (loginCubit.state.isValid) 
+          ? loginCubit.onSubmit
+          : null,
+          ),
         SizedBox(height: 10),
         CustomButton(
           icon: Icons.fingerprint,

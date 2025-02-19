@@ -1,15 +1,25 @@
+import 'package:animate_do/animate_do.dart';
+import 'package:app_template/infraestructure/inputs/inputs.dart';
+import 'package:app_template/presentation/cubit/register/register_cubit.dart';
 import 'package:app_template/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   static const name = 'register-screen';
   const RegisterScreen({super.key});
 
   @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const SafeArea(child: _RegisterView()),
+      body: SafeArea(
+          child: BlocProvider(
+              create: (context) => RegisterCubit(), child: _RegisterView())),
     );
   }
 }
@@ -22,68 +32,203 @@ class _RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<_RegisterView> {
-  final PageController pageViewController = PageController();
+  int formsStep = 1;
 
-  @override
-  void dispose() {
-    pageViewController.dispose();
-    super.dispose();
+  void nextStep() {
+    setState(() {
+      formsStep = 2;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
-    return Column(
-      children: [
-        // Botón de regreso
-        Padding(
-          padding: const EdgeInsets.only(top: 10, left: 16),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Container(
-                width: 40,
-                height: 40,
-                color: colors.primary,
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Colors.white),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
+    final registerCubit = context.watch<RegisterCubit>();
+    final email = registerCubit.state.email;
+    final phoneNumber = registerCubit.state.phoneNumber;
+    final password = registerCubit.state.password;
+    final confirmPassword = registerCubit.state.confirmPassword;
+    final username = registerCubit.state.username;
+
+    return Scaffold(
+      bottomNavigationBar: (formsStep == 1)
+          ? Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Checkbox(
+                        value: registerCubit.state.termsAndConditions.value,
+                        onChanged: (bool? value) {
+                          registerCubit
+                              .termsAndConditionsChanged(value ?? false);
+                        },
+                      ),
+                      const Text('Acepto '),
+                      GestureDetector(
+                        onTap: () {
+                          // Acción al tocar el texto
+                        },
+                        child: Text(
+                          'Términos y condiciones',
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                      const Text(' de uso'),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  SizedBox(
+                    width: double.infinity,
+                    child: CustomButton(
+                        text: 'Continuar',
+                        onPressed: (registerCubit.state.isStepValid &&
+                                registerCubit.state.termsAndConditions.value)
+                            ? nextStep
+                            : null),
+                  )
+                ],
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CusstomButtonField(
+                  text: 'Continuar',
+                  onPressed: (registerCubit.state.isValid) ? () {} : null),
+            ),
+      body: Column(
+        children: [
+          // Botón de regreso
+          Padding(
+            padding: const EdgeInsets.only(top: 10, left: 16),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  color: colors.primary,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () {
+                      if (formsStep == 2) {
+                        setState(() {
+                          formsStep--;
+                        });
+                      }
+                    },
+                  ),
                 ),
               ),
             ),
           ),
-        ),
 
-        // Barra de progreso
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: SizedBox(
-              height: 8,
-              child: LinearProgressIndicator(
-                value: 0.5,
-                backgroundColor: Colors.grey[300],
-                valueColor: AlwaysStoppedAnimation<Color>(colors.primary),
-              ),
+          CustomLinearProgressIndicator(
+              formsStep: formsStep, finalStep: 2, colors: colors.primary),
+
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+              child: (formsStep == 1)
+                  ? FadeInLeft(
+                      duration: const Duration(milliseconds: 300),
+                      child: _FirstForm(
+                        registerCubit: registerCubit,
+                        email: email,
+                        phoneNumber: phoneNumber,
+                        password: password,
+                        username: username,
+                        onNextStep: nextStep,
+                      ),
+                    )
+                  : FadeInRight(
+                      duration: const Duration(milliseconds: 300),
+                      child: _SecondForm(
+                        registerCubit: registerCubit,
+                        password: password,
+                        confirmPassword: confirmPassword,
+                      ),
+                    ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FirstForm extends StatefulWidget {
+  const _FirstForm({
+    required this.registerCubit,
+    required this.email,
+    required this.phoneNumber,
+    required this.password,
+    required this.username,
+    required this.onNextStep,
+  });
+
+  final RegisterCubit registerCubit;
+  final Email email;
+  final PhoneNumber phoneNumber;
+  final Password password;
+  final Username username;
+  final VoidCallback onNextStep;
+
+  @override
+  State<_FirstForm> createState() => _FirstFormState();
+}
+
+class _FirstFormState extends State<_FirstForm> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        const SizedBox(height: 20),
+        const CustomTitle(
+          text: '¡Hola!',
+          textAlign: TextAlign.left,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            CustomSubtitle(text: '1/2', textAlign: TextAlign.right),
-          ],
+        const SizedBox(height: 10),
+        const CustomSubtitle(
+          text: 'Estás a punto de iniciar, solo necesitas completar tus datos.',
+          textAlign: TextAlign.left,
         ),
-        // Contenido con desplazamiento
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            child: _FirstForm(),
+        const SizedBox(height: 20),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: CustomTextFormField(
+            label: 'Nombre completo',
+            keyboardType: TextInputType.name,
+            onChanged: widget.registerCubit.usernameChanged,
+            errorMessage: widget.username.errorMessage,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: CustomTextFormField(
+            label: 'Email',
+            keyboardType: TextInputType.emailAddress,
+            onChanged: widget.registerCubit.emailChanged,
+            errorMessage: widget.email.errorMessage,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: CustomTextFormField(
+            label: 'Teléfono',
+            keyboardType: TextInputType.phone,
+            onChanged: widget.registerCubit.phoneNumberChanged,
+            errorMessage: widget.phoneNumber.errorMessage,
           ),
         ),
       ],
@@ -92,31 +237,32 @@ class _RegisterViewState extends State<_RegisterView> {
 }
 
 class _SecondForm extends StatelessWidget {
-  const _SecondForm();
+  const _SecondForm({
+    required this.registerCubit,
+    required this.password,
+    required this.confirmPassword,
+  });
+
+  final RegisterCubit registerCubit;
+  final Password password;
+  final ConfirmPassword confirmPassword;
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const SizedBox(height: 20),
-        const Text(
-          'ELIGE UNA CONTRASEÑA',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 28,
-            height: 1.2,
-            color: Color(0XFFEC1424),
-          ),
+        const CustomTitle(
+          text: 'Elige una contraseña',
+          textAlign: TextAlign.left,
         ),
         const SizedBox(height: 10),
-        const Text(
-          'Crea una contraseña segura, para proteger tu cuenta y disfrutar del Carnaval sin preocupaciones.',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 14,
-            height: 1.2,
-          ),
+        const CustomSubtitle(
+          text:
+              'Crea una contraseña segura, para proteger tu cuenta y disfrutar del Carnaval sin preocupaciones.',
+          textAlign: TextAlign.left,
         ),
         const SizedBox(height: 20),
         Padding(
@@ -125,6 +271,8 @@ class _SecondForm extends StatelessWidget {
             label: 'Contraseña',
             keyboardType: TextInputType.name,
             obscureText: true,
+            onChanged: registerCubit.passwordChanged,
+            errorMessage: password.errorMessage,
           ),
         ),
         Padding(
@@ -133,31 +281,38 @@ class _SecondForm extends StatelessWidget {
             label: 'Repite la contraseña',
             keyboardType: TextInputType.name,
             obscureText: true,
+            onChanged: registerCubit.confirmPasswordChanged,
+            errorMessage: confirmPassword.errorMessage,
           ),
         ),
         const SizedBox(height: 20),
-        const Padding(
+        Padding(
           padding: EdgeInsets.all(8.0),
           child: Text(
             'Tu contraseña debe tener',
             textAlign: TextAlign.left,
             style: TextStyle(
-              fontSize: 14,
-              height: 1.2,
-              color: Color(0xFFFFAA022),
-              fontWeight: FontWeight.bold
-            ),
+                fontSize: 14,
+                height: 1.2,
+                color: colors.primary,
+                fontWeight: FontWeight.bold),
           ),
         ),
         const SizedBox(height: 20),
-        const Padding(
+        Padding(
           padding: EdgeInsets.all(8.0),
           child: Row(
             children: [
-              Icon(Icons.check, 
-              color: Color(0xFFFFAA022), 
-              size: 20),
-              SizedBox(width: 10,),
+              Icon(
+                registerCubit.state.hasUpperCase ? Icons.check : Icons.close,
+                color: registerCubit.state.hasUpperCase
+                    ? colors.primary
+                    : colors.error,
+                size: 20,
+              ),
+              SizedBox(
+                width: 10,
+              ),
               Text(
                 'Al menos una letra mayúscula',
                 textAlign: TextAlign.left,
@@ -170,14 +325,20 @@ class _SecondForm extends StatelessWidget {
             ],
           ),
         ),
-        const Padding(
+        Padding(
           padding: EdgeInsets.all(8.0),
           child: Row(
             children: [
-              Icon(Icons.check, 
-              color: Color(0xFFFFAA022), 
-              size: 20),
-              SizedBox(width: 10,),
+              Icon(
+                registerCubit.state.hasMinLength ? Icons.check : Icons.close,
+                color: registerCubit.state.hasMinLength
+                    ? colors.primary
+                    : colors.error,
+                size: 20,
+              ),
+              SizedBox(
+                width: 10,
+              ),
               Text(
                 'Un mínimo de 8 caracteres',
                 textAlign: TextAlign.left,
@@ -190,14 +351,22 @@ class _SecondForm extends StatelessWidget {
             ],
           ),
         ),
-        const Padding(
+        Padding(
           padding: EdgeInsets.all(8.0),
           child: Row(
             children: [
-              Icon(Icons.close, 
-              color: Color(0xFFD3B19B), 
-              size: 20),
-              SizedBox(width: 10,),
+              Icon(
+                registerCubit.state.hasSpecialCharOrNumber
+                    ? Icons.check
+                    : Icons.close,
+                color: registerCubit.state.hasSpecialCharOrNumber
+                    ? colors.primary
+                    : colors.error,
+                size: 20,
+              ),
+              SizedBox(
+                width: 10,
+              ),
               Text(
                 'Debe tener un caracter especial o un número',
                 textAlign: TextAlign.left,
@@ -210,93 +379,6 @@ class _SecondForm extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 20),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            margin: const EdgeInsets.all(5),
-            width: double.infinity,
-            child: FilledButton(
-              style: FilledButton.styleFrom(
-                backgroundColor: const Color(0xFFFFAA02),
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-              onPressed: () {},
-              child: const Text(
-                'Continuar',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 10),
-      ],
-    );
-  }
-}
-
-class _FirstForm extends StatefulWidget {
-  const _FirstForm();
-
-  @override
-  State<_FirstForm> createState() => _FirstFormState();
-}
-
-class _FirstFormState extends State<_FirstForm> {
-  int? selectedDay;
-  int? selectedMonth;
-  int? selectedYear;
-  bool isReferrals = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        const SizedBox(height: 20),
-        const CustomTitle(
-          text: '¡Hola Marcos!',
-          textAlign: TextAlign.left,),
-        const SizedBox(height: 10),
-        const CustomSubtitle(
-          text: 'Estás a punto de iniciar iniciar, solo necesitas completar tus datos.',
-          textAlign: TextAlign.left,
-          ),
-        const SizedBox(height: 20),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CustomTextFormField(
-            label: 'Nombre completo',
-            keyboardType: TextInputType.name,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CustomTextFormField(
-            label: 'Email',
-            keyboardType: TextInputType.emailAddress,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CustomTextFormField(
-            label: 'Teléfono',
-            keyboardType: TextInputType.phone,
-          ),
-        ),
-        const SizedBox(height: 10),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            margin: const EdgeInsets.all(5),
-            width: double.infinity,
-            child: CustomButton(
-              text: 'Continuar', 
-              onPressed: (){})
-          ),
-        ),
-        const SizedBox(height: 10),
       ],
     );
   }

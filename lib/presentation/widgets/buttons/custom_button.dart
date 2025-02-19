@@ -4,7 +4,7 @@ enum ButtonTheme { primary, secondary, tertiary }
 
 class CustomButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Color? themeColor;
   final IconData? icon; 
 
@@ -19,14 +19,14 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final buttonColor = themeColor ?? colors.primary; // Usa el color proporcionado o el primario por defecto
+    final buttonColor = themeColor ?? colors.primary;
     final textColor = Colors.white;
     return FilledButton(
       style: FilledButton.styleFrom(
         backgroundColor: buttonColor,
         padding: const EdgeInsets.symmetric(vertical: 15),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(50),
         ),
       ),
       onPressed: onPressed,
@@ -35,7 +35,7 @@ class CustomButton extends StatelessWidget {
         children: [
           if (icon != null) ...[
             Icon(icon, color: textColor, size: 24),
-            const SizedBox(width: 10), // Espacio entre ícono y texto
+            const SizedBox(width: 10), 
           ],
           Text(
             text,
