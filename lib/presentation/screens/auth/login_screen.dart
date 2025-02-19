@@ -1,10 +1,146 @@
+import 'package:app_template/presentation/widgets/buttons/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:app_template/infraestructure/inputs/inputs.dart';
+import 'package:app_template/presentation/cubit/login/login_cubit.dart';
+import 'package:app_template/presentation/widgets/widgets.dart';
 
 class LoginScreen extends StatelessWidget {
+  static const name = 'login-screen';
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return BlocProvider(create: (context) => LoginCubit(), child: _LoginPage());
+  }
+}
+
+class _LoginPage extends StatelessWidget {
+  const _LoginPage();
+  @override
+  Widget build(BuildContext context) {
+    final loginCubit = context.watch<LoginCubit>();
+    final email = loginCubit.state.email;
+    final passwoord = loginCubit.state.password;
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: _FormContent(
+            loginCubit: loginCubit,
+            email: email,
+            passwoord: passwoord,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FormContent extends StatelessWidget {
+  const _FormContent({
+    required this.loginCubit,
+    required this.email,
+    required this.passwoord,
+  });
+
+  final LoginCubit loginCubit;
+  final Email email;
+  final Password passwoord;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          'Iniciar sesion',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 24,
+            height: 0.9,
+          ),
+        ),
+        SizedBox(height: 20),
+        CustomTextFormField(
+          label: 'Correo',
+          onChanged: loginCubit.emailChanged,
+          errorMessage: email.errorMessage,
+          keyboardType: TextInputType.emailAddress,
+        ),
+        SizedBox(height: 10),
+        CustomTextFormField(
+          label: 'Contraseña',
+          obscureText: true,
+          onChanged: loginCubit.passwordChanged,
+          errorMessage: passwoord.errorMessage,
+          keyboardType: TextInputType.text,
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton(
+            onPressed: () {},
+            child: const Text(
+              'Olvidé mi contraseña',
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 10),
+        CusstomButtonField(
+          text: 'Ingresar', 
+          onPressed: loginCubit.onSubmit),
+        SizedBox(height: 10),
+        CustomButton(
+          icon: Icons.fingerprint,
+          text: 'Usar Biometria', 
+          onPressed: (){},
+          themeColor: colors.secondary,
+          ),
+        SizedBox(height: 20),
+        _RegisterButton(),
+      ],
+    );
+  }
+}
+
+class _RegisterButton extends StatelessWidget {
+  const _RegisterButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            '¿No tienes cuenta?',
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 16,
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              context.push('/auth/register');
+            },
+            child: const Text(
+              'Registrate',
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
