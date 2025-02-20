@@ -102,7 +102,9 @@ class _RegisterViewState extends State<_RegisterView> {
               padding: const EdgeInsets.all(8.0),
               child: CusstomButtonField(
                   text: 'Continuar',
-                  onPressed: (registerCubit.state.isValid) ? () {} : null),
+                  onPressed: (registerCubit.state.isValid && registerCubit.state.hasMinLength && registerCubit.state.hasUpperCase && registerCubit.state.hasSpecialCharOrNumber)  
+                  ? () {} 
+                  : null),
             ),
       body: Column(
         children: [

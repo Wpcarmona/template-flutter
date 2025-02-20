@@ -25,6 +25,7 @@ class _LoginPage extends StatelessWidget {
     final email = loginCubit.state.email;
     final passwoord = loginCubit.state.password;
     return Scaffold(
+      bottomNavigationBar: _RegisterButton(),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -100,8 +101,6 @@ class _FormContent extends StatelessWidget {
           onPressed: (){},
           themeColor: colors.secondary,
           ),
-        SizedBox(height: 20),
-        _RegisterButton(),
       ],
     );
   }
@@ -112,8 +111,7 @@ class _RegisterButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.center,
+    return SafeArea(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
