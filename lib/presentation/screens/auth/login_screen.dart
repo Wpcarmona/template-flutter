@@ -70,6 +70,7 @@ class _FormContent extends StatelessWidget {
         CustomTextFormField(
           label: 'Contraseña',
           obscureText: true,
+          showToggleEye: true,
           onChanged: loginCubit.passwordChanged,
           errorMessage: passwoord.errorMessage,
           keyboardType: TextInputType.text,
@@ -77,7 +78,9 @@ class _FormContent extends StatelessWidget {
         Align(
           alignment: Alignment.centerRight,
           child: TextButton(
-            onPressed: () {},
+            onPressed: () {
+              context.go('/auth/reset-password');
+            },
             child: const Text(
               'Olvidé mi contraseña',
               style: TextStyle(
