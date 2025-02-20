@@ -9,6 +9,7 @@ class RegisterCubit extends Cubit<RegisterFormState> {
   RegisterCubit() : super(RegisterFormState());
 
   void onSubmit() {
+    print("onSubmit: $state");
     emit(
       state.copyWith(
         formStatus: FormStatus.validating,

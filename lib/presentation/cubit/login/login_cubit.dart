@@ -8,6 +8,7 @@ class LoginCubit extends Cubit<LoginFormState> {
   LoginCubit() : super(const LoginFormState());
 
   void onSubmit() {
+    print("onSubmit: $state");
     emit(
       state.copyWith(
         formStatus: FormStatus.validating,

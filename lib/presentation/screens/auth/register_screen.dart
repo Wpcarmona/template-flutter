@@ -103,7 +103,7 @@ class _RegisterViewState extends State<_RegisterView> {
               child: CusstomButtonField(
                   text: 'Continuar',
                   onPressed: (registerCubit.state.isValid && registerCubit.state.hasMinLength && registerCubit.state.hasUpperCase && registerCubit.state.hasSpecialCharOrNumber)  
-                  ? () {} 
+                  ? registerCubit.onSubmit
                   : null),
             ),
       body: Column(

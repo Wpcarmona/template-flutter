@@ -51,7 +51,7 @@ class _BottomButton extends StatelessWidget {
         child: CusstomButtonField(
           text: 'Enviar', 
           onPressed: (resetPasswordCubit.state.isValid) 
-          ? (){}
+          ? resetPasswordCubit.onSubmit
           : null
           ),
       ),

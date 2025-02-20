@@ -10,6 +10,7 @@ class ResetPasswordCubit extends Cubit<ResetPasswordFormState> {
 
 
   void onSubmit(){
+    print("onSubmit: $state");
     emit(
       state.copyWith(
         formStatus: FormStatus.validating, 
