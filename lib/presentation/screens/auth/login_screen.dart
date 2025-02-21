@@ -94,7 +94,7 @@ class _FormContent extends StatelessWidget {
         CusstomButtonField(
           text: 'Ingresar', 
           onPressed: (loginCubit.state.isValid) 
-          ? loginCubit.onSubmit
+          ? () => context.go('/') //loginCubit.onSubmit
           : null,
           ),
         SizedBox(height: 10),

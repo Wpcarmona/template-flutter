@@ -1,23 +1,23 @@
-
 import 'package:flutter/material.dart';
 
 class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
+  final GlobalKey<ScaffoldState> scaffoldKey;
+  const HeaderWidget({super.key, required this.scaffoldKey});
+
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: const Text('Hola,Pedro'),
+      leading: IconButton(onPressed: () {
+        scaffoldKey.currentState?.openDrawer();
+      }, icon: const Icon(Icons.menu)),
+      title: const Text('App Template'),
       actions: <Widget>[
         IconButton(
           icon: const Icon(Icons.add_alert),
-          tooltip: 'Show Snackbar',
-          onPressed: () {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(const SnackBar(content: Text('This is a snackbar')));
-          },
+          onPressed: () {},
         ),
       ],
     );
