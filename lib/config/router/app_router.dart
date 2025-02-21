@@ -1,11 +1,13 @@
-import 'package:app_template/presentation/screens/auth/reset_password_screen.dart';
 import 'package:app_template/presentation/screens/screens.dart';
-import 'package:app_template/presentation/screens/tabs/tabs.dart';
 import 'package:go_router/go_router.dart';
 
 final appRouter = GoRouter(initialLocation: '/', routes: [
   GoRoute(
       path: '/', builder: (context, state) => const TabsScreen(), routes: []),
+  GoRoute(
+      path: '/profile',
+      builder: (context, state) => const ProfileScreen(),
+      routes: []),
   GoRoute(
       path: '/auth/login',
       builder: (context, state) => const LoginScreen(),

@@ -1,6 +1,5 @@
-import 'package:app_template/presentation/views/tabs/home_view.dart';
-import 'package:app_template/presentation/widgets/drawer/sidemenu.dart';
-import 'package:app_template/presentation/widgets/header/header_widget.dart';
+import 'package:app_template/presentation/views/views.dart';
+import 'package:app_template/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class TabsScreen extends StatefulWidget {

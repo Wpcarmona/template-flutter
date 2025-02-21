@@ -9,3 +9,4 @@ export 'Texts/custom_subtitle.dart';
 export 'progressIndicator/custom_linear_progress_indicator.dart';
 export 'drawer/sidemenu.dart';
 export 'segment/custom_segment.dart';
+export 'header/header_widget.dart';
