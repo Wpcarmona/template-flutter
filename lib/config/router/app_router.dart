@@ -9,6 +9,15 @@ final appRouter = GoRouter(initialLocation: '/', routes: [
       builder: (context, state) => const ProfileScreen(),
       routes: []),
   GoRoute(
+      path: '/notifications',
+      builder: (context, state) => const NotificationScreen(),
+      routes: []),
+  GoRoute(
+    path: '/push-details/:messageId',
+    builder: (context, state) => DetailsnotificationScreen(
+        pushMessageId: state.pathParameters['messageId'] ?? ''),
+  ),
+  GoRoute(
       path: '/auth/login',
       builder: (context, state) => const LoginScreen(),
       routes: []),
