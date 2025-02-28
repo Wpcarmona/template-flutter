@@ -10,3 +10,4 @@ export 'progressIndicator/custom_linear_progress_indicator.dart';
 export 'drawer/sidemenu.dart';
 export 'segment/custom_segment.dart';
 export 'header/header_widget.dart';
+export 'card/custom_card_accordion.dart';
