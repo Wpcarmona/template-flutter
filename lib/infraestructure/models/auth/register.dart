@@ -57,7 +57,7 @@ class ParticipantData {
         name: json["name"],
         avatar: json["avatar"],
         uid: json["uid"],
-        uidType: json["uid_type"],
+        uidType: json["uid_type"] ?? "",
         state: json["state"],
     );
 

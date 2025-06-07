@@ -15,7 +15,7 @@ class Password extends FormzInput<String, PasswordError> {
   String? get errorMessage {
     if (isValid || isPure) return null;
     if (displayError == PasswordError.empty) return 'El campo es obligatorio';
-    if (displayError == PasswordError.length) return 'Debe tener al menos 8 caracteres';
+    if (displayError == PasswordError.length) return 'Debe tener al menos 5 caracteres';
     if (displayError == PasswordError.format) return 'Debe contener una mayúscula y un carácter especial';
 
     return null;
@@ -24,8 +24,8 @@ class Password extends FormzInput<String, PasswordError> {
   @override
   PasswordError? validator(String value) {
     if (value.isEmpty || value.trim().isEmpty) return PasswordError.empty;
-    if (value.length < 8) return PasswordError.length;
-    if (!passwordRegExp.hasMatch(value)) return PasswordError.format;
+    if (value.length < 5) return PasswordError.length;
+    // if (!passwordRegExp.hasMatch(value)) return PasswordError.format;
     return null;
   }
 }

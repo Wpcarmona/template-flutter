@@ -1,7 +1,11 @@
-
-
 export 'auth/login.dart';
 export 'auth/logout.dart';
 export 'auth/register.dart';
 export 'auth/sendVerifyPhone.dart';
 export 'auth/verifyPhone.dart';
+export 'auth/resetPassword.dart';
+export 'auth/publicInfoUser.dart';
+export 'auth/updatePassword.dart';
+export 'auth/updateUser.dart';
+export 'blog/get_blogs.dart';
+export 'blog/voted_blog.dart';

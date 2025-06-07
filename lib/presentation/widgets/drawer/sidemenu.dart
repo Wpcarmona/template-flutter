@@ -1,16 +1,18 @@
+import 'package:app_template/presentation/providers/auth/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class SideMenu extends StatefulWidget {
+class SideMenu extends ConsumerStatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
 
   const SideMenu({super.key, required this.scaffoldKey});
 
   @override
-  State<SideMenu> createState() => _SideMenuState();
+  SideMenuState createState() => SideMenuState();
 }
 
-class _SideMenuState extends State<SideMenu> {
+class SideMenuState extends ConsumerState<SideMenu> {
   int navDrawerIndex = 0;
 
   @override
@@ -66,18 +68,19 @@ class _SideMenuState extends State<SideMenu> {
             // Botón de cerrar sesión
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  context.go(
-                            '/auth/login');
+              child: TextButton.icon(
+                onPressed: () async {
+                  await ref.read(authProvider.notifier).logout();
                   widget.scaffoldKey.currentState?.closeDrawer();
                 },
-                icon: const Icon(Icons.logout, color: Colors.white,),
-                label: const Text('Cerrar Sesión'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colors.primary,
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size(double.infinity, 50),
+                icon: Icon(
+                  Icons.logout,
+                  color: colors.primary, // Cambia según el diseño
+                ),
+                label: Text(
+                  'Cerrar Sesión',
+                  style:
+                      TextStyle(color: colors.primary), // Cambia según el diseño
                 ),
               ),
             ),

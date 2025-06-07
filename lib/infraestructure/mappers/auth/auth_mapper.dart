@@ -7,7 +7,7 @@ class AuthMapper {
   static Login loginToEntity(LoginResponse login) => Login(
     ok: login.ok,
     token: login.token,
-    participant: UserLogin(
+    participant: Participant(
       id: login.participant.id, 
       email: login.participant.email, 
       name: login.participant.name, 
@@ -25,7 +25,7 @@ class AuthMapper {
   static Register registerToEntity(CreateUserResponse register) => Register(
     ok: register.ok,
     token: register.token,
-    participant: ParticipantRegister(
+    participant: Participant(
       id: register.participantData.id, 
       email: register.participantData.email, 
       name: register.participantData.name, 
@@ -42,4 +42,35 @@ class AuthMapper {
 
   static VerifyPhone verifyPhoneToEntity(VerifyPhoneResponse verifyPhone) => 
   VerifyPhone(ok: verifyPhone.ok, message: verifyPhone.message);
+
+  static ResetPassword resetPasswordToEntity(ResetPasswordResponse resetPassword) =>
+  ResetPassword(ok: resetPassword.ok, message: resetPassword.message);
+
+  static ParticipantInfoPublic participantPublicInfoToEntity(PublicInfoUserResponse participantPublicInfo) =>
+  ParticipantInfoPublic(
+    ok: participantPublicInfo.ok, 
+    info: PublicInfoUser(
+      id: participantPublicInfo.object.uid,
+      email: participantPublicInfo.object.email, 
+      points: participantPublicInfo.object.points, 
+      totalPoints: participantPublicInfo.object.totalPoints, 
+      coins: participantPublicInfo.object.coins, 
+      totalCoins: participantPublicInfo.object.totalCoins,)
+    );
+
+  static UpdatePassword updatePasswordToEntity(UpdatePasswordResponse updatePassword) =>
+  UpdatePassword(ok: updatePassword.ok, message: updatePassword.message);
+
+  static UpdateUser updateUserToEntity(UpdateUserResponse updateUser) =>
+  UpdateUser(
+    ok: updateUser.ok, 
+    message: updateUser.message, 
+    participant: Participant(
+      id: updateUser.participantData.id, 
+      email: updateUser.participantData.email, 
+      name: updateUser.participantData.name, 
+      avatar: updateUser.participantData.avatar, 
+      uid: updateUser.participantData.uid, 
+      uidType: updateUser.participantData.uidType, 
+      state: updateUser.participantData.state,));
 }

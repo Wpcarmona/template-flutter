@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class CusstomButtonField extends StatelessWidget {
+class CustomButtonField extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
 
-  const CusstomButtonField({
+  const CustomButtonField({
     required this.text,
     required this.onPressed,
     super.key,

@@ -1,3 +1,4 @@
+import 'dart:convert';
 
 import 'package:app_template/config/constants/environment.dart';
 import 'package:app_template/domain/datasource/datasource.dart';
@@ -31,78 +32,162 @@ class AuthSPDatasource extends AuthDatasource {
     final sendVerifyPhoneResponse = SendVerifyPhoneResponse.fromJson(json);
     return AuthMapper.sendVerifyPhoneToEntity(sendVerifyPhoneResponse);
   }
+
   VerifyPhone _jsonToVerifyPhone(Map<String, dynamic> json) {
     final verifyPhoneResponse = VerifyPhoneResponse.fromJson(json);
     return AuthMapper.verifyPhoneToEntity(verifyPhoneResponse);
   }
-  
+
+  ResetPassword _jsonToResetPassword(Map<String, dynamic> json) {
+    final resetPasswordResponse = ResetPasswordResponse.fromJson(json);
+    return AuthMapper.resetPasswordToEntity(resetPasswordResponse);
+  }
+
+  ParticipantInfoPublic _jsonToParticipantPublicInfo(
+      Map<String, dynamic> json) {
+    final participantPublicInfoResponse = PublicInfoUserResponse.fromJson(json);
+    return AuthMapper.participantPublicInfoToEntity(
+        participantPublicInfoResponse);
+  }
+
+  UpdatePassword _jsonToUpdatePassword(Map<String, dynamic> json) {
+    final updatePasswordResponse = UpdatePasswordResponse.fromJson(json);
+    return AuthMapper.updatePasswordToEntity(updatePasswordResponse);
+  }
+
+  UpdateUser _jsonToUpdateUser(Map<String, dynamic> json) {
+    final updateUserResponse = UpdateUserResponse.fromJson(json);
+    return AuthMapper.updateUserToEntity(updateUserResponse);
+  }
+
   @override
-  Future<Login> login(
-      {required String numberDocument, required String password}) async {
+  Future<Login> login({required String email, required String password}) async {
     final response = await dio.post(
-      '/auth/login',
+      '/sessions/login',
       data: {
-        'numberDocument': numberDocument,
-        'password': password,
+        "api_key": Environment.apiKey,
+        "campaign": Environment.campaign,
+        "participation": {
+          "email": email,
+          "password": password,
+        }
       },
     );
 
-    return _jsonToLogin(response.data);
+    final Map<String, dynamic> responseData = jsonDecode(response.data);
+
+    return _jsonToLogin(responseData);
   }
 
   @override
-  Future<Logout> logout() async {
-    final response = await dio.post(
-      '/auth/logout',
-      options: Options(
-        headers: {
-          'Authorization': 'Bearer 123', //TODO agregar el header desde el isar
-        }
-      )
-      );
-
-    return _jsonToLogout(response.data);
+  Future<Logout> logout({required String token}) async {
+    final response = await dio.post('/sessions/logout',
+        options: Options(headers: {
+          'Authorization': 'Bearer $token',
+        }));
+    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    return _jsonToLogout(responseData);
   }
-  
+
   @override
-  Future<Register> register({required String email, required String typeDocument, required String numberDocument, required String password, required String passwordConfirmation, required String numberPhone, required String completeName, required String countryCode, required String dateOfBirth}) async {
-    
-    final response = await dio.post(
-      '/users/create',
-      data:{
+  Future<Register> register(
+      {required String name,
+      required String email,
+      required String phoneNumber,
+      required String password,
+      required String passwordConfirmation}) async {
+    final response = await dio.post('/participants', data: {
+      'api_key': Environment.apiKey,
+      'campaign': Environment.campaign,
+      'properties': {
+        'name': name,
+        'phone': phoneNumber,
         'email': email,
-        'numero_de_documento': numberDocument,
-        'tipo_de_documento': typeDocument,
         'password': password,
-        'password_confirm': passwordConfirmation,
-        'numero_de_celular': countryCode + numberPhone,
-        'nombre_completo': completeName,
-        'fecha_de_nacimiento': dateOfBirth,
+        'password_confirm': passwordConfirmation
       }
-    );
-    return _jsonToRegister(response.data);
+    });
+    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    return _jsonToRegister(responseData);
   }
-  
+
   @override
   Future<SendVerifyPhone> sendVerifyPhone({required String userId}) async {
-    final response = await  dio.post(
-      '/validations/send_verify_phone',
-      data: {
-        'user_id': userId
-      }
-    );
+    final response = await dio
+        .post('/validations/send_verify_phone', data: {'user_id': userId});
     return _jsonToSendVerifyPhone(response.data);
   }
-  
+
   @override
-  Future<VerifyPhone> verifyPhone({required String userId, required String code}) async {
-    final response = await dio.post(
-      '/validations/verify_phone',
-      data: {
-        'user_id': userId,
-        'code': code
-      }
-    );
+  Future<VerifyPhone> verifyPhone(
+      {required String userId, required String code}) async {
+    final response = await dio.post('/validations/verify_phone',
+        data: {'user_id': userId, 'code': code});
     return _jsonToVerifyPhone(response.data);
+  }
+
+  @override
+  Future<ResetPassword> resetPassword({required String email}) async {
+    final response = await dio.post('/passwords', data: {
+      "api_key": Environment.apiKey,
+      "campaign": Environment.campaign,
+      "participation": {
+        "email": email,
+      },
+      "notification_channel": "email"
+    });
+    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    return _jsonToResetPassword(responseData);
+  }
+
+  @override
+  Future<ParticipantInfoPublic> participantPublicInfo(
+      {required String token}) async {
+    final response = await dio.get('/participants/info',
+        options: Options(headers: {
+          'Authorization': 'Bearer $token',
+        }));
+    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    return _jsonToParticipantPublicInfo(responseData);
+  }
+
+  @override
+  Future<UpdatePassword> updatePassword(
+      {required String token,
+      required String actualPassword,
+      required String newPassword,
+      required String newPasswordConfirmation}) async {
+    final response = await dio.post('/passwords/change',
+        options: Options(headers: {
+          'Authorization': 'Bearer $token',
+        }),
+        data: {
+          "participation": {
+            "current_password": actualPassword,
+            "password": newPassword,
+            "password_confirmation": newPasswordConfirmation
+          }
+        });
+    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    return _jsonToUpdatePassword(responseData);
+  }
+
+  @override
+  Future<UpdateUser> updateUser(
+      {required String token, String? name, String? phone}) async {
+    final Map<String, dynamic> data = {};
+
+    if (name != null) data["name"] = name;
+    if (phone != null) data["phone"] = phone;
+
+    final response = await dio.post(
+      '/participants/update',
+      options: Options(headers: {
+        'Authorization': 'Bearer $token',
+      }),
+      data: data,
+    );
+    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    return _jsonToUpdateUser(responseData);
   }
 }

@@ -3,7 +3,7 @@
 class Login {
   final String ok;
   final String token;
-  final UserLogin participant;
+  final Participant participant;
   final String message;
 
   Login({
@@ -14,7 +14,7 @@ class Login {
     });
 }
 
-class UserLogin {
+class Participant {
   final String id;
   final String email;
   final String name;
@@ -23,7 +23,7 @@ class UserLogin {
   final String uidType;
   final String state;
 
-  UserLogin({
+  Participant({
     required this.id,
     required this.email,
     required this.name,

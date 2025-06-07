@@ -1,0 +1,2 @@
+/Users/pedrocarmona/Documents/Superlikers/template-flutter/android/app/.cxx/Debug/2x1c26b1/x86/CMakeFiles/edit_cache.dir
+/Users/pedrocarmona/Documents/Superlikers/template-flutter/android/app/.cxx/Debug/2x1c26b1/x86/CMakeFiles/rebuild_cache.dir

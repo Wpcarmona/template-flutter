@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -17,7 +18,9 @@ class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
       actions: <Widget>[
         IconButton(
           icon: const Icon(Icons.add_alert),
-          onPressed: () {},
+          onPressed: () {
+            context.push('/notifications');
+          },
         ),
       ],
     );
