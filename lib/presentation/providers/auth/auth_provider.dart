@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:app_template/config/constants/app_keys.dart';
+import 'package:app_template/presentation/utils/dio_exception_handler.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app_template/config/plugins/local_auth_plugin.dart';
@@ -23,16 +25,19 @@ final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   final keyValueStorageService = KeyValueStorageServiceImpl();
 
   return AuthNotifier(
+    ref: ref,
     authRepository: authRepository,
     keyValueStorageService: keyValueStorageService,
   );
 });
 
 class AuthNotifier extends StateNotifier<AuthState> {
+  final Ref ref;
   final AuthRepository authRepository;
   final KeyValueStorageService keyValueStorageService;
 
   AuthNotifier({
+    required this.ref,
     required this.authRepository,
     required this.keyValueStorageService,
   }) : super(AuthState()) {
@@ -45,19 +50,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
           await authRepository.login(email: email, password: password);
       _setLoggedUser(login);
     } on DioException catch (e) {
-      final responseData = jsonDecode(e.response?.data);
-      if (responseData is Map<String, dynamic>) {
-        final errorData = responseData['data'];
-        if (errorData is Map<String, dynamic> &&
-            errorData.containsKey('message')) {
-          state = state.copyWith(errorMessage: errorData['message']);
-        } else {
-          state = state.copyWith(errorMessage: responseData['message']);
-        }
-      } else {
-        state =
-            state.copyWith(errorMessage: 'Error inesperado en la respuesta');
-      }
+      handleDioException(e, (message) {
+        state = state.copyWith(
+            errorMessage: message, authStatus: AuthStatus.notAuthenticated);
+      }, ref);
     }
   }
 
@@ -72,19 +68,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
         _setLoggedUserBiometric(email, password);
       }
     } on DioException catch (e) {
-      final responseData = jsonDecode(e.response?.data);
-      if (responseData is Map<String, dynamic>) {
-        final errorData = responseData['data'];
-        if (errorData is Map<String, dynamic> &&
-            errorData.containsKey('message')) {
-          state = state.copyWith(errorMessage: errorData['message']);
-        } else {
-          state = state.copyWith(errorMessage: responseData['message']);
-        }
-      } else {
-        state =
-            state.copyWith(errorMessage: 'Error inesperado en la respuesta');
-      }
+      handleDioException(e, (message) {
+        state = state.copyWith(
+            errorMessage: message, authStatus: AuthStatus.notAuthenticated);
+      }, ref);
     }
   }
 
@@ -108,7 +95,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> removeBiometric() async {
     try {
       await LocalAuthPlugin.clearCredentials();
-      await keyValueStorageService.setKeyValue('biometric', false);
+      await keyValueStorageService.setKeyValue(AppKeys.biometric, false);
       state = state.copyWith(
         errorMessage: 'Se eliminaron las credenciales exitosamente',
       );
@@ -120,22 +107,34 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> logout([String? errorMessage]) async {
-    final token = await keyValueStorageService.getValue<String>('token');
-    if (token != null) {
+    try {
+      final token =
+          await keyValueStorageService.getValue<String>(AppKeys.token);
+      if (token == null) return;
       await authRepository.logout(token: token);
-      await keyValueStorageService.removeKey('token');
-      await keyValueStorageService.removeKey('userInfo');
-      await keyValueStorageService.removeKey('publicUserInfo');
+      await keyValueStorageService.removeKey(AppKeys.token);
+      await keyValueStorageService.removeKey(AppKeys.userInfo);
+      await keyValueStorageService.removeKey(AppKeys.publicUserInfo);
       state = state.copyWith(
           authStatus: AuthStatus.notAuthenticated,
           user: null,
           errorMessage: errorMessage);
-    } else {
-      state = state.copyWith(
-          authStatus: AuthStatus.notAuthenticated,
-          user: null,
-          errorMessage: errorMessage);
+    } on DioException catch (e) {
+      handleDioException(e, (message) {
+        state = state.copyWith(
+            errorMessage: message, authStatus: AuthStatus.notAuthenticated);
+      }, ref);
     }
+  }
+
+  Future<void> handleDeletedAccountOrExpirateToken() async {
+     await keyValueStorageService.getValue<String>(AppKeys.token);
+      await keyValueStorageService.removeKey(AppKeys.token);
+      await keyValueStorageService.removeKey(AppKeys.userInfo);
+      await keyValueStorageService.removeKey(AppKeys.publicUserInfo);
+      await keyValueStorageService.removeKey(AppKeys.biometric);
+      state = state.copyWith(authStatus: AuthStatus.notAuthenticated, user: null);
+    
   }
 
   Future<void> registerUser(String name, String countryCode, String phoneNumber,
@@ -150,44 +149,25 @@ class AuthNotifier extends StateNotifier<AuthState> {
       _setRegisterUser(register);
       // _setRegisterUser(register);
     } on DioException catch (e) {
-      final responseData = jsonDecode(e.response?.data);
-      if (responseData is Map<String, dynamic>) {
-        final errorData = responseData['data'];
-        if (errorData is Map<String, dynamic> &&
-            errorData.containsKey('message')) {
-          state = state.copyWith(errorMessage: errorData['message']);
-        } else {
-          state = state.copyWith(errorMessage: responseData['message']);
-        }
-      } else {
-        state =
-            state.copyWith(errorMessage: 'Error inesperado en la respuesta');
-      }
+      handleDioException(e, (message) {
+        state = state.copyWith(errorMessage: message);
+      }, ref);
     }
   }
 
   Future<void> getInfoPublicUser() async {
     try {
-      final token = await keyValueStorageService.getValue<String>('token');
+      final token =
+          await keyValueStorageService.getValue<String>(AppKeys.token);
       if (token != null) {
         final publicInfoUser =
             await authRepository.participantPublicInfo(token: token);
         _setPublicInfoUser(publicInfoUser.info);
       }
     } on DioException catch (e) {
-      final responseData = jsonDecode(e.response?.data);
-      if (responseData is Map<String, dynamic>) {
-        final errorData = responseData['data'];
-        if (errorData is Map<String, dynamic> &&
-            errorData.containsKey('message')) {
-          state = state.copyWith(errorMessage: errorData['message']);
-        } else {
-          state = state.copyWith(errorMessage: responseData['message']);
-        }
-      } else {
-        state =
-            state.copyWith(errorMessage: 'Error inesperado en la respuesta');
-      }
+      handleDioException(e, (message) {
+        state = state.copyWith(errorMessage: message);
+      }, ref);
     }
   }
 
@@ -196,26 +176,17 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final resetPassword = await authRepository.resetPassword(email: email);
       _setResetPassword(resetPassword);
     } on DioException catch (e) {
-      final responseData = jsonDecode(e.response?.data);
-      if (responseData is Map<String, dynamic>) {
-        final errorData = responseData['data'];
-        if (errorData is Map<String, dynamic> &&
-            errorData.containsKey('message')) {
-          state = state.copyWith(errorMessage: errorData['message']);
-        } else {
-          state = state.copyWith(errorMessage: responseData['message']);
-        }
-      } else {
-        state =
-            state.copyWith(errorMessage: 'Error inesperado en la respuesta');
-      }
+      handleDioException(e, (message) {
+        state = state.copyWith(errorMessage: message);
+      }, ref);
     }
   }
 
   Future<void> updatePassword(String actualPassword, String newPassword,
       String newPasswordConfirmation) async {
     try {
-      final token = await keyValueStorageService.getValue<String>('token');
+      final token =
+          await keyValueStorageService.getValue<String>(AppKeys.token);
       if (token != null) {
         final updatePassword = await authRepository.updatePassword(
             token: token,
@@ -225,26 +196,17 @@ class AuthNotifier extends StateNotifier<AuthState> {
         _setUpdatePassword(updatePassword);
       }
     } on DioException catch (e) {
-      final responseData = jsonDecode(e.response?.data);
-      if (responseData is Map<String, dynamic>) {
-        final errorData = responseData['data'];
-        if (errorData is Map<String, dynamic> &&
-            errorData.containsKey('message')) {
-          state = state.copyWith(errorMessage: errorData['message']);
-        } else {
-          state = state.copyWith(errorMessage: responseData['message']);
-        }
-      } else {
-        state =
-            state.copyWith(errorMessage: 'Error inesperado en la respuesta');
-      }
+      handleDioException(e, (message) {
+        state = state.copyWith(errorMessage: message);
+      }, ref);
     }
   }
 
   Future<void> updateUser(String token, String? name, String? phone) async {
     try {
       if (name != null) {
-        final updateUser = await authRepository.updateUser(token: token, name: name);
+        final updateUser =
+            await authRepository.updateUser(token: token, name: name);
         _setUpdateUser(updateUser);
       } else if (phone != null) {
         final updateUser =
@@ -256,30 +218,20 @@ class AuthNotifier extends StateNotifier<AuthState> {
         _setUpdateUser(updateUser);
       }
     } on DioException catch (e) {
-      final responseData = jsonDecode(e.response?.data);
-      if (responseData is Map<String, dynamic>) {
-        final errorData = responseData['data'];
-        if (errorData is Map<String, dynamic> &&
-            errorData.containsKey('message')) {
-          state = state.copyWith(errorMessage: errorData['message']);
-        } else {
-          state = state.copyWith(errorMessage: responseData['message']);
-        }
-      } else {
-        state =
-            state.copyWith(errorMessage: 'Error inesperado en la respuesta');
-      }
+      handleDioException(e, (message) {
+        state = state.copyWith(errorMessage: message);
+      }, ref);
     }
   }
 
   void checkAuthStatus() async {
-    final token = await keyValueStorageService.getValue<String>('token');
-    if (token == null) return logout();
+    final token = await keyValueStorageService.getValue<String>(AppKeys.token);
+    if (token == null) return handleDeletedAccountOrExpirateToken();
     state = state.copyWith(authStatus: AuthStatus.authenticated);
   }
 
   void _setLoggedUser(Login login) async {
-    await keyValueStorageService.setKeyValue('token', login.token);
+    await keyValueStorageService.setKeyValue(AppKeys.token, login.token);
     _setInfouser(login.participant);
     await getInfoPublicUser();
     state = state.copyWith(
@@ -289,7 +241,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   void _setRegisterUser(Register register) async {
-    await keyValueStorageService.setKeyValue('token', register.token);
+    await keyValueStorageService.setKeyValue(AppKeys.token, register.token);
     _setInfouser(register.participant);
     await getInfoPublicUser();
     state = state.copyWith(
