@@ -1,5 +1,6 @@
-import 'dart:convert';
 
+import 'package:app_template/config/constants/app_keys.dart';
+import 'package:app_template/presentation/utils/dio_exception_handler.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app_template/domain/entities/entities.dart';
@@ -20,50 +21,62 @@ final blogProvider = StateNotifierProvider<BlogNotifier, BlogState>((ref) {
   final keyValueStorageService = KeyValueStorageServiceImpl();
 
   return BlogNotifier(
+    ref: ref,
     blogRepository: blogRepository,
     keyValueStorageService: keyValueStorageService,
   );
 });
 
 class BlogNotifier extends StateNotifier<BlogState> {
+  final Ref ref;
   final BlogRepository blogRepository;
   final KeyValueStorageService keyValueStorageService;
 
   BlogNotifier({
+    required this.ref,
     required this.blogRepository,
     required this.keyValueStorageService,
   }) : super(BlogState());
 
   Future<void> getBlogs() async {
     try {
-      final token = await keyValueStorageService.getValue<String>('token');
+      final token = await keyValueStorageService.getValue<String>(AppKeys.token);
       if (token == null) return;
       final getBlog = await blogRepository.getBlogs(token: token);
       _setBlogs(getBlog);
     } on DioException catch (e) {
-      handleDioException(e);
+      handleDioException(e, (message) {
+        state = state.copyWith(
+            errorMessage: message, blogStatus: BlogStatus.error);
+      }, ref);
     }
   }
 
   Future<void> createBlog(String title, String body, String? image) async {
     try {
-      final token = await keyValueStorageService.getValue<String>('token');
+      final token = await keyValueStorageService.getValue<String>(AppKeys.token);
       if (token == null) return;
       await blogRepository.createBlog(
           token: token, title: title, body: body, image: image);
       _setCreateBlog();
     } on DioException catch (e) {
-      handleDioException(e);
+      handleDioException(e, (message) {
+        state = state.copyWith(
+            errorMessage: message, blogStatus: BlogStatus.error);
+      }, ref);
     }
   }
 
   Future<void> votedBlog(String id) async {
     try {
-      final token = await keyValueStorageService.getValue<String>('token');
+      final token = await keyValueStorageService.getValue<String>(AppKeys.token);
       if (token == null) return;
       await blogRepository.voteBlog(token: token, blogId: id);
     } on DioException catch (e) {
-      handleDioException(e);
+      handleDioException(e, (message) {
+        state = state.copyWith(
+            errorMessage: message, blogStatus: BlogStatus.error);
+      }, ref);
     }
   }
 
@@ -71,7 +84,7 @@ class BlogNotifier extends StateNotifier<BlogState> {
     state = state.copyWith(isLoading: true, errorMessage: null);
 
     try {
-      final token = await keyValueStorageService.getValue<String>('token');
+      final token = await keyValueStorageService.getValue<String>(AppKeys.token);
       if (token == null) {
         state = state.copyWith(isLoading: false);
         return;
@@ -82,21 +95,25 @@ class BlogNotifier extends StateNotifier<BlogState> {
 
       _setComment(getComment);
     } on DioException catch (e) {
-      handleDioException(e);
-      state =
-          state.copyWith(isLoading: false); // Aseguramos que termine el loading
+      handleDioException(e, (message) {
+        state = state.copyWith(
+            errorMessage: message, blogStatus: BlogStatus.error);
+      }, ref);
     }
   }
 
   Future<void> createComment(String blogId, String body) async {
     try {
-      final token = await keyValueStorageService.getValue<String>('token');
+      final token = await keyValueStorageService.getValue<String>(AppKeys.token);
       if (token == null) return;
       await blogRepository.createComment(
           token: token, blogId: blogId, body: body);
       _setCreateComment(blogId);
     } on DioException catch (e) {
-      handleDioException(e);
+      handleDioException(e, (message) {
+        state = state.copyWith(
+            errorMessage: message, blogStatus: BlogStatus.error);
+      }, ref);
     }
   }
 
@@ -116,27 +133,13 @@ class BlogNotifier extends StateNotifier<BlogState> {
     getComment(blogId);
   }
 
-  void handleDioException(DioException e) {
-    final responseData = jsonDecode(e.response?.data ?? '{}');
-    String message = 'Error inesperado en la respuesta';
-
-    if (responseData is Map<String, dynamic>) {
-      final errorData = responseData['data'];
-      if (errorData is Map<String, dynamic> &&
-          errorData.containsKey('message')) {
-        message = errorData['message'];
-      } else if (responseData.containsKey('message')) {
-        message = responseData['message'];
-      }
-    }
-
-    state = state.copyWith(errorMessage: message, isLoading: false);
-  }
+  
 }
 
 class BlogState {
   final List<Blog> blogs;
   final List<GetComments> comments;
+  final BlogStatus blogStatus;
   final bool isLoading;
   final String? errorMessage;
 
@@ -144,18 +147,21 @@ class BlogState {
       {this.blogs = const [],
       this.comments = const [],
       this.isLoading = false,
+      this.blogStatus = BlogStatus.initial,
       this.errorMessage});
 
   BlogState copyWith({
     List<Blog>? blogs,
     List<GetComments>? comments,
     bool? isLoading,
+    BlogStatus? blogStatus,
     String? errorMessage,
   }) =>
       BlogState(
         blogs: blogs ?? this.blogs,
         comments: comments ?? this.comments,
         isLoading: isLoading ?? this.isLoading,
+        blogStatus: blogStatus ?? this.blogStatus,
         errorMessage: errorMessage ?? this.errorMessage,
       );
 }
