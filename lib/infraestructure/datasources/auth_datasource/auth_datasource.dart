@@ -43,12 +43,6 @@ class AuthSPDatasource extends AuthDatasource {
     return AuthMapper.resetPasswordToEntity(resetPasswordResponse);
   }
 
-  ParticipantInfoPublic _jsonToParticipantPublicInfo(
-      Map<String, dynamic> json) {
-    final participantPublicInfoResponse = PublicInfoUserResponse.fromJson(json);
-    return AuthMapper.participantPublicInfoToEntity(
-        participantPublicInfoResponse);
-  }
 
   UpdatePassword _jsonToUpdatePassword(Map<String, dynamic> json) {
     final updatePasswordResponse = UpdatePasswordResponse.fromJson(json);
@@ -138,17 +132,6 @@ class AuthSPDatasource extends AuthDatasource {
     });
     final Map<String, dynamic> responseData = jsonDecode(response.data);
     return _jsonToResetPassword(responseData);
-  }
-
-  @override
-  Future<ParticipantInfoPublic> participantPublicInfo(
-      {required String token}) async {
-    final response = await dio.get('/participants/info',
-        options: Options(headers: {
-          'Authorization': 'Bearer $token',
-        }));
-    final Map<String, dynamic> responseData = jsonDecode(response.data);
-    return _jsonToParticipantPublicInfo(responseData);
   }
 
   @override

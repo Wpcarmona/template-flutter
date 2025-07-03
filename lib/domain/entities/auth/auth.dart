@@ -2,10 +2,11 @@
 
 export 'login.dart';
 export 'logout.dart';
-export 'public_participant_info.dart';
+export '../participant/public_participant_info.dart';
 export 'register.dart';
 export 'reset_password.dart';
 export 'send_verify_phone.dart';
-export 'update_password.dart';
 export 'update_user.dart';
+export 'update_password.dart';
 export 'verify_phone.dart';
+export 'update_tags.dart';

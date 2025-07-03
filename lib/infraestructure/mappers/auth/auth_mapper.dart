@@ -45,19 +45,7 @@ class AuthMapper {
 
   static ResetPassword resetPasswordToEntity(ResetPasswordResponse resetPassword) =>
   ResetPassword(ok: resetPassword.ok, message: resetPassword.message);
-
-  static ParticipantInfoPublic participantPublicInfoToEntity(PublicInfoUserResponse participantPublicInfo) =>
-  ParticipantInfoPublic(
-    ok: participantPublicInfo.ok, 
-    info: PublicInfoUser(
-      id: participantPublicInfo.object.uid,
-      email: participantPublicInfo.object.email, 
-      points: participantPublicInfo.object.points, 
-      totalPoints: participantPublicInfo.object.totalPoints, 
-      coins: participantPublicInfo.object.coins, 
-      totalCoins: participantPublicInfo.object.totalCoins,)
-    );
-
+  
   static UpdatePassword updatePasswordToEntity(UpdatePasswordResponse updatePassword) =>
   UpdatePassword(ok: updatePassword.ok, message: updatePassword.message);
 

@@ -2,3 +2,7 @@
 
 export 'auth_repository/auth_repository.dart';
 export 'blog_repository/blog_repository.dart';
+export 'metrics_repository/metrics_repository.dart';
+export 'achievements_repository/achievement_repository.dart';
+export 'external_repository/external_repository.dart';
+export 'participant_repository/participant_repository.dart';

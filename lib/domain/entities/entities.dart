@@ -3,3 +3,4 @@ export 'auth/auth.dart';
 export 'blog/blog.dart';
 export 'external/external.dart';
 export 'goals/get_goals.dart';
+export 'participant/participant.dart';

@@ -15,6 +15,7 @@ class PublicInfoUser {
   final int totalPoints;
   final dynamic coins;
   final dynamic totalCoins;
+  final List<String> tags;
 
   PublicInfoUser({
     required this.id,
@@ -23,5 +24,6 @@ class PublicInfoUser {
     required this.totalPoints,
     required this.coins,
     required this.totalCoins,
+    required this.tags
   });
 }

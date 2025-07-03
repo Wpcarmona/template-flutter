@@ -53,11 +53,6 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
-  Future<ParticipantInfoPublic> participantPublicInfo({required String token}) {
-    return authDatasource.participantPublicInfo(token: token);
-  }
-
-  @override
   Future<UpdatePassword> updatePassword(
       {required String token,
       required String actualPassword,
@@ -74,4 +69,6 @@ class AuthRepositoryImpl extends AuthRepository {
   Future<UpdateUser> updateUser({required String token, String? name, String? phone}) {
     return authDatasource.updateUser(token: token, name: name, phone: phone);
   }
+  
+  
 }

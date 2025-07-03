@@ -40,6 +40,7 @@ class Object {
     final bool unconfirmedCellphone;
     final String avatar;
     final DateTime lastActivityAt;
+    List<String> tags;
 
     Object({
         required this.uid,
@@ -57,6 +58,7 @@ class Object {
         required this.unconfirmedCellphone,
         required this.avatar,
         required this.lastActivityAt,
+        required this.tags,
     });
 
     factory Object.fromJson(Map<String, dynamic> json) => Object(
@@ -75,6 +77,7 @@ class Object {
         unconfirmedCellphone: json["unconfirmed_cellphone"],
         avatar: json["avatar"],
         lastActivityAt: DateTime.parse(json["last_activity_at"]),
+        tags: List<String>.from(json["tags"].map((x) => x)),
     );
 
     Map<String, dynamic> toJson() => {
@@ -93,5 +96,6 @@ class Object {
         "unconfirmed_cellphone": unconfirmedCellphone,
         "avatar": avatar,
         "last_activity_at": lastActivityAt.toIso8601String(),
+        "tags": List<dynamic>.from(tags.map((x) => x)),
     };
 }

@@ -5,8 +5,6 @@ abstract class AuthDatasource {
 
   Future<Logout> logout({required String token});
 
-  Future<ParticipantInfoPublic> participantPublicInfo({required String token});
-
   Future<Register> register({
     required String name,
     required String email,

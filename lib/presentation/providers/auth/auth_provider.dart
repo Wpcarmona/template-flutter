@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:app_template/config/constants/app_keys.dart';
+import 'package:app_template/presentation/providers/achievements/achievement_provider.dart';
+import 'package:app_template/presentation/providers/metrics/metrics_provider.dart';
+import 'package:app_template/presentation/providers/participant/participant_provider.dart';
 import 'package:app_template/presentation/utils/dio_exception_handler.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -115,6 +118,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
       await keyValueStorageService.removeKey(AppKeys.token);
       await keyValueStorageService.removeKey(AppKeys.userInfo);
       await keyValueStorageService.removeKey(AppKeys.publicUserInfo);
+      ref.invalidate(participantProvider);
+      ref.invalidate(achievementProvider);
+      ref.invalidate(metricsProvider);
       state = state.copyWith(
           authStatus: AuthStatus.notAuthenticated,
           user: null,
@@ -128,13 +134,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> handleDeletedAccountOrExpirateToken() async {
-     await keyValueStorageService.getValue<String>(AppKeys.token);
-      await keyValueStorageService.removeKey(AppKeys.token);
-      await keyValueStorageService.removeKey(AppKeys.userInfo);
-      await keyValueStorageService.removeKey(AppKeys.publicUserInfo);
-      await keyValueStorageService.removeKey(AppKeys.biometric);
-      state = state.copyWith(authStatus: AuthStatus.notAuthenticated, user: null);
-    
+    await keyValueStorageService.clearAll();
+    ref.invalidate(participantProvider);
+    ref.invalidate(achievementProvider);
+    ref.invalidate(metricsProvider);
+    state = state.copyWith(authStatus: AuthStatus.notAuthenticated, user: null);
   }
 
   Future<void> registerUser(String name, String countryCode, String phoneNumber,
@@ -148,22 +152,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
           phoneNumber: countryCode + phoneNumber);
       _setRegisterUser(register);
       // _setRegisterUser(register);
-    } on DioException catch (e) {
-      handleDioException(e, (message) {
-        state = state.copyWith(errorMessage: message);
-      }, ref);
-    }
-  }
-
-  Future<void> getInfoPublicUser() async {
-    try {
-      final token =
-          await keyValueStorageService.getValue<String>(AppKeys.token);
-      if (token != null) {
-        final publicInfoUser =
-            await authRepository.participantPublicInfo(token: token);
-        _setPublicInfoUser(publicInfoUser.info);
-      }
     } on DioException catch (e) {
       handleDioException(e, (message) {
         state = state.copyWith(errorMessage: message);
@@ -224,6 +212,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
+  void setAuthStatus() {
+    state = state.copyWith(authStatus: AuthStatus.authenticated);
+  }
+
   void checkAuthStatus() async {
     final token = await keyValueStorageService.getValue<String>(AppKeys.token);
     if (token == null) return handleDeletedAccountOrExpirateToken();
@@ -233,7 +225,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   void _setLoggedUser(Login login) async {
     await keyValueStorageService.setKeyValue(AppKeys.token, login.token);
     _setInfouser(login.participant);
-    await getInfoPublicUser();
+    await ref.read(participantProvider.notifier).getInfoPublicUser();
     state = state.copyWith(
         authStatus: AuthStatus.authenticated,
         user: login.participant,
@@ -243,7 +235,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   void _setRegisterUser(Register register) async {
     await keyValueStorageService.setKeyValue(AppKeys.token, register.token);
     _setInfouser(register.participant);
-    await getInfoPublicUser();
+    await ref.read(participantProvider.notifier).getInfoPublicUser();
     state = state.copyWith(
         authStatus: AuthStatus.authenticated,
         user: register.participant,
@@ -260,17 +252,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
           'name': participant.name,
           'avatar': participant.avatar,
           'state': participant.state
-        }));
-  }
-
-  void _setPublicInfoUser(PublicInfoUser publicInfoUser) async {
-    await keyValueStorageService.setKeyValue(
-        'publicUserInfo',
-        jsonEncode({
-          'points': publicInfoUser.points,
-          'totalPoints': publicInfoUser.totalPoints,
-          'coins': publicInfoUser.coins,
-          'totalCoins': publicInfoUser.totalCoins
         }));
   }
 
