@@ -6,3 +6,4 @@ export 'metrics_repository/metrics_repository.dart';
 export 'achievements_repository/achievement_repository.dart';
 export 'external_repository/external_repository.dart';
 export 'participant_repository/participant_repository.dart';
+export 'ranking_repository/ranking_repository.dart';
