@@ -17,7 +17,7 @@ class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
       title: const Text('App Template'),
       actions: <Widget>[
         IconButton(
-          icon: const Icon(Icons.add_alert),
+          icon: const Icon(Icons.notifications_none_rounded),
           onPressed: () {
             context.push('/notifications');
           },

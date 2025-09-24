@@ -14,7 +14,7 @@ class CreateBlogResponse {
     int activityPoints;
     String message;
     String executionError;
-    Object object;
+    ObjectCreateBlog object;
 
     CreateBlogResponse({
         required this.ok,
@@ -31,7 +31,7 @@ class CreateBlogResponse {
         activityPoints: json["activity_points"],
         message: json["message"],
         executionError: json["execution_error"],
-        object: Object.fromJson(json["object"]),
+        object: ObjectCreateBlog.fromJson(json["object"]),
     );
 
     Map<String, dynamic> toJson() => {
@@ -44,7 +44,7 @@ class CreateBlogResponse {
     };
 }
 
-class Object {
+class ObjectCreateBlog {
     String id;
     String type;
     int activityCount;
@@ -68,7 +68,7 @@ class Object {
     List<dynamic> files;
     dynamic pushRedirectUrl;
 
-    Object({
+    ObjectCreateBlog({
         required this.id,
         required this.type,
         required this.activityCount,
@@ -93,7 +93,7 @@ class Object {
         required this.pushRedirectUrl,
     });
 
-    factory Object.fromJson(Map<String, dynamic> json) => Object(
+    factory ObjectCreateBlog.fromJson(Map<String, dynamic> json) => ObjectCreateBlog(
         id: json["_id"],
         type: json["_type"],
         activityCount: json["activity_count"],

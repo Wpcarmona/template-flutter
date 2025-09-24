@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:app_template/config/constants/environment.dart';
 import 'package:app_template/domain/datasource/datasource.dart';
 import 'package:app_template/domain/entities/entities.dart';
-import 'package:app_template/infraestructure/mappers/models.dart';
+import 'package:app_template/infraestructure/mappers/mappers.dart';
 import 'package:app_template/infraestructure/models/models.dart';
 import 'package:dio/dio.dart';
 

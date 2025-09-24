@@ -5,7 +5,7 @@ enum NumberDocumentError { empty, length }
 class NumberDocument extends FormzInput<String, NumberDocumentError> {
   const NumberDocument.pure() : super.pure('');
 
-  const NumberDocument.dirty(String value ) : super.dirty(value);
+  const NumberDocument.dirty(super.value ) : super.dirty();
 
   String? get errorMessage {
     if(isValid || isPure) return null;

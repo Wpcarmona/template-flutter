@@ -1,9 +1,9 @@
 export 'username.dart';
 export 'password.dart';
 export 'email.dart';
-export 'numberDocument.dart';
-export 'phoneNumber.dart';
-export 'termsAndConditions.dart';
-export 'confirmpassword.dart';
-export 'countryCode.dart';
+export 'number_document.dart';
+export 'phone_number.dart';
+export 'terms_and_conditions.dart';
+export 'confirm_password.dart';
+export 'country_code.dart';
 export 'text.dart';

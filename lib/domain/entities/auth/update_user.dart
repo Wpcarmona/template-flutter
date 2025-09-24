@@ -1,4 +1,6 @@
-import 'package:app_template/domain/entities/auth/login.dart';
+
+
+import 'package:app_template/domain/entities/participant/participant.dart';
 
 class UpdateUser {
   final String ok;

@@ -1,5 +1,3 @@
-
-
 export 'login.dart';
 export 'logout.dart';
 export '../participant/public_participant_info.dart';
@@ -10,3 +8,4 @@ export 'update_user.dart';
 export 'update_password.dart';
 export 'verify_phone.dart';
 export 'update_tags.dart';
+export 'reset_password_validate.dart';

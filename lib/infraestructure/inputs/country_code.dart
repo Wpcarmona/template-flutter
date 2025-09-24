@@ -31,7 +31,7 @@ class CountryCode extends FormzInput<String, CountryCodeError> {
   ];
 
   const CountryCode.pure() : super.pure('');
-  const CountryCode.dirty(String value) : super.dirty(value);
+  const CountryCode.dirty(super.value) : super.dirty();
 
   String? get errorMessage {
     if (isValid || isPure) return null;

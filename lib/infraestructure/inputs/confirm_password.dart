@@ -1,6 +1,5 @@
 import 'package:formz/formz.dart';
 
-// Definir errores
 enum ConfirmPasswordError { empty, mismatch }
 
 class ConfirmPassword extends FormzInput<String, ConfirmPasswordError> {

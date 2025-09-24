@@ -4,7 +4,7 @@ enum TermsAndConditionsError { notAccepted }
 
 class TermsAndConditions extends FormzInput<bool, TermsAndConditionsError> {
   const TermsAndConditions.pure() : super.pure(false);
-  const TermsAndConditions.dirty(bool value) : super.dirty(value);
+  const TermsAndConditions.dirty(super.value) : super.dirty();
 
   String? get errorMessage {
     if (isValid || isPure) return null;

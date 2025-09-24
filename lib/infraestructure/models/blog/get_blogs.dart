@@ -10,7 +10,7 @@ String blogResponseToJson(BlogResponse data) => json.encode(data.toJson());
 
 class BlogResponse {
     String ok;
-    Data data;
+    DataGetBlog data;
 
     BlogResponse({
         required this.ok,
@@ -19,7 +19,7 @@ class BlogResponse {
 
     factory BlogResponse.fromJson(Map<String, dynamic> json) => BlogResponse(
         ok: json["ok"],
-        data: Data.fromJson(json["data"]),
+        data: DataGetBlog.fromJson(json["data"]),
     );
 
     Map<String, dynamic> toJson() => {
@@ -28,14 +28,14 @@ class BlogResponse {
     };
 }
 
-class Data {
+class DataGetBlog {
     int page;
     int pageSize;
     int totalPages;
     int totalData;
     List<BlogPost> blogPosts;
 
-    Data({
+    DataGetBlog({
         required this.page,
         required this.pageSize,
         required this.totalPages,
@@ -43,7 +43,7 @@ class Data {
         required this.blogPosts,
     });
 
-    factory Data.fromJson(Map<String, dynamic> json) => Data(
+    factory DataGetBlog.fromJson(Map<String, dynamic> json) => DataGetBlog(
         page: json["page"],
         pageSize: json["page_size"],
         totalPages: json["total_pages"],

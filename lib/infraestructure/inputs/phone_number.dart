@@ -5,7 +5,7 @@ enum PhoneNumberError { empty, length }
 class PhoneNumber extends FormzInput<String, PhoneNumberError> {
   const PhoneNumber.pure() : super.pure('');
 
-  const PhoneNumber.dirty(String value ) : super.dirty(value);
+  const PhoneNumber.dirty(super.value ) : super.dirty();
 
   String? get errorMessage {
     if(isValid || isPure) return null;

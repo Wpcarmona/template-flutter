@@ -4,7 +4,8 @@
 
 import 'dart:convert';
 
-import 'package:app_template/infraestructure/models/models.dart';
+import 'package:app_template/infraestructure/models/auth/auth.dart';
+
 
 UpdateUserResponse updateUserResponseFromJson(String str) => UpdateUserResponse.fromJson(json.decode(str));
 

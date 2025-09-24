@@ -52,13 +52,13 @@ class ParticipantData {
     });
 
     factory ParticipantData.fromJson(Map<String, dynamic> json) => ParticipantData(
-        id: json["_id"],
+        id: json["_id"] ?? "",
         email: json["email"],
         name: json["name"],
-        avatar: json["avatar"],
+        avatar: json["avatar"] ?? "",
         uid: json["uid"],
         uidType: json["uid_type"] ?? "",
-        state: json["state"],
+        state: json["state"] ?? "",
     );
 
     Map<String, dynamic> toJson() => {

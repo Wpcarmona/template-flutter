@@ -1,5 +1,9 @@
 
-import 'package:app_template/domain/entities/entities.dart';
+
+
+
+
+import 'package:app_template/domain/entities/participant/participant.dart';
 
 class Register {
   final String ok;

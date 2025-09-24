@@ -54,7 +54,7 @@ class Achievement {
     String state;
     List<String> tags;
     String createdAt;
-    Participant participant;
+    ParticipantAchievement participant;
     List<String> activityFilter;
     String activityTarget;
     List<dynamic> participantFilter;
@@ -101,7 +101,7 @@ class Achievement {
         state: json["state"],
         tags: List<String>.from(json["tags"].map((x) => x)),
         createdAt:json["created_at"],
-        participant: Participant.fromJson(json["participant"]),
+        participant: ParticipantAchievement.fromJson(json["participant"]),
         activityFilter: List<String>.from(json["activity_filter"].map((x) => x)),
         activityTarget: json["activity_target"],
         participantFilter: List<dynamic>.from(json["participant_filter"].map((x) => x)),
@@ -144,20 +144,20 @@ class Achievement {
     };
 }
 
-class Participant {
+class ParticipantAchievement {
     String name;
     String id;
     String uid;
     String email;
 
-    Participant({
+    ParticipantAchievement({
         required this.name,
         required this.id,
         required this.uid,
         required this.email,
     });
 
-    factory Participant.fromJson(Map<String, dynamic> json) => Participant(
+    factory ParticipantAchievement.fromJson(Map<String, dynamic> json) => ParticipantAchievement(
         name: json["name"],
         id: json["id"],
         uid: json["uid"],

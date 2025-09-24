@@ -1,12 +1,13 @@
+
+
 import 'dart:convert';
 
-import 'package:app_template/config/constants/environment.dart';
+import 'package:app_template/config/config.dart';
 import 'package:app_template/domain/datasource/datasource.dart';
-import 'package:app_template/domain/entities/entities.dart';
+import 'package:app_template/domain/entities/entities.dart' hide ParticipantInfoPublic;
+import 'package:app_template/domain/entities/participant/public_participant_info.dart';
 import 'package:app_template/infraestructure/mappers/participant/participant_mapper.dart';
-import 'package:app_template/infraestructure/models/models.dart';
-import 'package:app_template/infraestructure/models/participant/findParticipantWithTags.dart';
-import 'package:app_template/infraestructure/models/participant/updateUserTags.dart';
+import 'package:app_template/infraestructure/models/models.dart' hide ParticipantInfoPublic;
 import 'package:dio/dio.dart';
 
 class ParticipantImplDatasource extends ParticipantDatasource {

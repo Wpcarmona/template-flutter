@@ -1,10 +1,8 @@
 
 
+
 import 'package:app_template/domain/entities/entities.dart';
-import 'package:app_template/infraestructure/models/blog/create_blog.dart';
-import 'package:app_template/infraestructure/models/blog/create_comment.dart';
-import 'package:app_template/infraestructure/models/blog/get_comments.dart';
-import 'package:app_template/infraestructure/models/models.dart';
+import 'package:app_template/infraestructure/models/models.dart' hide Participant;
 
 class BlogMapper {
 

@@ -10,7 +10,7 @@ String getCommentsResponseToJson(GetCommentsResponse data) => json.encode(data.t
 
 class GetCommentsResponse {
     String ok;
-    Data data;
+    DataGetComments data;
 
     GetCommentsResponse({
         required this.ok,
@@ -19,7 +19,7 @@ class GetCommentsResponse {
 
     factory GetCommentsResponse.fromJson(Map<String, dynamic> json) => GetCommentsResponse(
         ok: json["ok"],
-        data: Data.fromJson(json["data"]),
+        data: DataGetComments.fromJson(json["data"]),
     );
 
     Map<String, dynamic> toJson() => {
@@ -28,14 +28,14 @@ class GetCommentsResponse {
     };
 }
 
-class Data {
+class DataGetComments {
     int page;
     int pageSize;
     int totalPages;
     int totalData;
     List<Comment> comments;
 
-    Data({
+    DataGetComments({
         required this.page,
         required this.pageSize,
         required this.totalPages,
@@ -43,7 +43,7 @@ class Data {
         required this.comments,
     });
 
-    factory Data.fromJson(Map<String, dynamic> json) => Data(
+    factory DataGetComments.fromJson(Map<String, dynamic> json) => DataGetComments(
         page: json["page"],
         pageSize: json["page_size"],
         totalPages: json["total_pages"],

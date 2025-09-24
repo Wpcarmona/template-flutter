@@ -14,7 +14,7 @@ class CreateCommentResponse {
     int activityPoints;
     String message;
     String executionError;
-    Object object;
+    ObjectCreateComment object;
 
     CreateCommentResponse({
         required this.ok,
@@ -31,7 +31,7 @@ class CreateCommentResponse {
         activityPoints: json["activity_points"],
         message: json["message"],
         executionError: json["execution_error"],
-        object: Object.fromJson(json["object"]),
+        object: ObjectCreateComment.fromJson(json["object"]),
     );
 
     Map<String, dynamic> toJson() => {
@@ -44,7 +44,7 @@ class CreateCommentResponse {
     };
 }
 
-class Object {
+class ObjectCreateComment {
     String id;
     String type;
     int activityCount;
@@ -65,7 +65,7 @@ class Object {
     List<String> participantsTags;
     dynamic pushRedirectUrl;
 
-    Object({
+    ObjectCreateComment({
         required this.id,
         required this.type,
         required this.activityCount,
@@ -87,7 +87,7 @@ class Object {
         required this.pushRedirectUrl,
     });
 
-    factory Object.fromJson(Map<String, dynamic> json) => Object(
+    factory ObjectCreateComment.fromJson(Map<String, dynamic> json) => ObjectCreateComment(
         id: json["_id"],
         type: json["_type"],
         activityCount: json["activity_count"],

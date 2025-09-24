@@ -7,3 +7,4 @@ export 'achievements_repository/achievements_repository.dart';
 export 'external_repository/external_repository.dart';
 export 'metrics_repository/metrics_repository.dart';
 export 'ranking_repository/ranking_repository.dart';
+export 'goals_repository/goals_repository.dart';

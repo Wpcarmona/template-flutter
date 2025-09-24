@@ -5,7 +5,7 @@ enum EmailError { empty, format }
 class Email extends FormzInput<String, EmailError> {
   const Email.pure() : super.pure('');
 
-  const Email.dirty(String value ) : super.dirty(value);
+  const Email.dirty(super.value ) : super.dirty();
 
   static final RegExp emailRegExp = RegExp(
     r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',

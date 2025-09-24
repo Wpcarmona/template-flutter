@@ -6,4 +6,6 @@ export 'achievements_datasource/achievement_datasource.dart';
 export 'external_datasource/external_datasource.dart';
 export 'metrics_datasource/metrics_datasource.dart';
 export 'participant_datasource/participant_datasource.dart';
+export 'prizes_datasource/prizes_datasource.dart';
 export 'ranking_datasource/ranking_datasource.dart';
+export 'goal_datasource/goal_datasource.dart';

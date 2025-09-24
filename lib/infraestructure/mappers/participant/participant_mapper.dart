@@ -1,8 +1,7 @@
 
+
 import 'package:app_template/domain/entities/entities.dart';
-import 'package:app_template/infraestructure/models/models.dart';
-import 'package:app_template/infraestructure/models/participant/findParticipantWithTags.dart';
-import 'package:app_template/infraestructure/models/participant/updateUserTags.dart';
+import 'package:app_template/infraestructure/models/models.dart' hide ParticipantInfoPublic, PublicInfoUser, UpdateTags;
 
 class ParticipantMapper {
   static ParticipantInfoPublic participantPublicInfoToEntity(

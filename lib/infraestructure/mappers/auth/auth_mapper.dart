@@ -1,7 +1,7 @@
 
 
-import 'package:app_template/domain/entities/entities.dart';
-import 'package:app_template/infraestructure/models/models.dart';
+import 'package:app_template/infraestructure/infraestructure.dart' hide Participant;
+import 'package:app_template/domain/domain.dart';
 
 class AuthMapper {
   static Login loginToEntity(LoginResponse login) => Login(
@@ -45,7 +45,7 @@ class AuthMapper {
 
   static ResetPassword resetPasswordToEntity(ResetPasswordResponse resetPassword) =>
   ResetPassword(ok: resetPassword.ok, message: resetPassword.message);
-  
+
   static UpdatePassword updatePasswordToEntity(UpdatePasswordResponse updatePassword) =>
   UpdatePassword(ok: updatePassword.ok, message: updatePassword.message);
 
@@ -61,4 +61,6 @@ class AuthMapper {
       uid: updateUser.participantData.uid, 
       uidType: updateUser.participantData.uidType, 
       state: updateUser.participantData.state,));
+
+
 }

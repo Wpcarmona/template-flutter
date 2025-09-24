@@ -1,13 +1,11 @@
 import 'package:formz/formz.dart';
 
-// Definir los errores de validación
 enum PasswordError { empty, length, format }
 
 class Password extends FormzInput<String, PasswordError> {
   const Password.pure() : super.pure('');
-  const Password.dirty(String value) : super.dirty(value);
+  const Password.dirty(super.value) : super.dirty();
 
-  // Expresión regular para validar la contraseña
   static final RegExp passwordRegExp = RegExp(
     r'^(?=.*[A-Z])(?=.*[\W_]).{8,}$',
   );

@@ -5,7 +5,7 @@ enum UsernameError { empty, length }
 class Username extends FormzInput<String, UsernameError> {
   const Username.pure() : super.pure('');
 
-  const Username.dirty(String value ) : super.dirty(value);
+  const Username.dirty(super.value ) : super.dirty();
 
   String? get errorMessage {
     if(isValid || isPure) return null;
