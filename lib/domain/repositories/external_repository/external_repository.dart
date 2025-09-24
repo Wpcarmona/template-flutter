@@ -16,4 +16,6 @@ abstract class ExternalRepository {
     required String category,
     required Map<String, dynamic> properties,
   });
+
+  Future<List<ExternalFormList>> getExternalFormListByCategory({required String token, required String category});
 }

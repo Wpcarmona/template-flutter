@@ -54,6 +54,11 @@ class AuthSPDatasource extends AuthDatasource {
     return AuthMapper.updateUserToEntity(updateUserResponse);
   }
 
+  ResetPassWordValidate _jsonToResetPassWordValidate(Map<String, dynamic> json) {
+    final resetPassWordValidateResponse = ValidateChannelResponse.fromJson(json);
+    return AuthMapper.resetPassWordValidateToEntity(resetPassWordValidateResponse);
+  }
+
   @override
   Future<Login> login({required String email, required String password}) async {
     final response = await dio.post(
@@ -172,5 +177,18 @@ class AuthSPDatasource extends AuthDatasource {
     );
     final Map<String, dynamic> responseData = jsonDecode(response.data);
     return _jsonToUpdateUser(responseData);
+  }
+
+  @override
+  Future<ResetPassWordValidate> resetPassWordValidate(
+      {required String email}) async {
+    final response = await dio.post('/passwords/validate_channel', data: {
+      "api_key": Environment.apiKey,
+      "campaign": Environment.campaign,
+      "email": email,
+    });
+
+    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    return _jsonToResetPassWordValidate(responseData);
   }
 }

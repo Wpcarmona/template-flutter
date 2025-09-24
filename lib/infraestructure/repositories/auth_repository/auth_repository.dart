@@ -1,7 +1,6 @@
-import 'package:app_template/domain/datasource/datasource.dart';
-import 'package:app_template/domain/entities/entities.dart';
-import 'package:app_template/domain/repositories/repository.dart';
-import 'package:app_template/infraestructure/datasources/auth_datasource/auth_datasource.dart';
+
+import 'package:app_template/infraestructure/infraestructure.dart';
+import 'package:app_template/domain/domain.dart';
 
 class AuthRepositoryImpl extends AuthRepository {
   final AuthDatasource authDatasource;
@@ -68,6 +67,11 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   Future<UpdateUser> updateUser({required String token, String? name, String? phone}) {
     return authDatasource.updateUser(token: token, name: name, phone: phone);
+  }
+  
+  @override
+  Future<ResetPassWordValidate> resetPassWordValidate({required String email}) {
+    return authDatasource.resetPassWordValidate(email: email);
   }
   
   

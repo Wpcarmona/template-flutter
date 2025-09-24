@@ -4,7 +4,6 @@ import 'package:app_template/config/constants/environment.dart';
 import 'package:app_template/domain/datasource/external_datasource/external_datasource.dart';
 import 'package:app_template/domain/entities/entities.dart';
 import 'package:app_template/infraestructure/mappers/external/external.dart';
-import 'package:app_template/infraestructure/models/external/create_external.dart';
 import 'package:app_template/infraestructure/models/models.dart';
 import 'package:dio/dio.dart';
 
@@ -21,6 +20,12 @@ class ExternalImplDatasource extends ExternalDatasource {
    ExternalFormField _jsonToExternalFormField(Map<String, dynamic> json) {
     final challengeResponse = DynamicFieldsResponse.fromJson(json);
     return ExternaFormFieldMapper.externalFormFieldToEntity(challengeResponse);
+  }
+
+  List<ExternalFormList> _jsonToExternalFormList(Map<String, dynamic> json) {
+    final externalFormList = ExternalFormResponse.fromJson(json);
+    return externalFormList.data.externals.map(
+        ExternalFormMapper.externalFormListToEntity).toList();
   }
 
   @override
@@ -66,6 +71,19 @@ class ExternalImplDatasource extends ExternalDatasource {
       });
     final Map<String, dynamic> responseData = jsonDecode(response.data);
     return _jsonToExternalFormField(responseData);
+  }
+
+  @override
+  Future <List<ExternalFormList>> getExternalFormListByCategory({required String token, required String category}) async {
+    final response = await dio.post('/external_forms/actions/list',
+      options: Options(headers: {
+        'Authorization': 'bearer $token',
+      }),
+      data: {
+        'category': category,
+      });
+    final Map<String, dynamic> responseData = jsonDecode(response.data);
+    return _jsonToExternalFormList(responseData);
   }
 
   

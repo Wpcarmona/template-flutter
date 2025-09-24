@@ -1,11 +1,9 @@
-import 'package:app_template/domain/entities/metrics/metrics.dart';
-import 'package:dio/dio.dart';
+
+import 'package:app_template/infraestructure/infraestructure.dart';
+import 'package:app_template/presentation/presentation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app_template/domain/repositories/repository.dart';
-import 'package:app_template/infraestructure/repositories/repositories_infraestructure.dart';
-import 'package:app_template/presentation/infraestructure/services/key_value_storage_service.dart';
-import 'package:app_template/presentation/infraestructure/services/key_value_storage_service_impl.dart';
-import 'package:app_template/presentation/utils/dio_exception_handler.dart';
+import 'package:app_template/domain/domain.dart';
+import 'package:dio/dio.dart';
 
 enum MetricsStatus {
   initial,

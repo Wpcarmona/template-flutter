@@ -8,7 +8,7 @@ String publicInfoUserResponseToJson(PublicInfoUserResponse data) =>
 
 class PublicInfoUserResponse {
   final String ok;
-  final Object object;
+  final ObjectPublicInfoUser object;
 
   PublicInfoUserResponse({
     required this.ok,
@@ -18,7 +18,7 @@ class PublicInfoUserResponse {
   factory PublicInfoUserResponse.fromJson(Map<String, dynamic> json) =>
       PublicInfoUserResponse(
         ok: json["ok"],
-        object: Object.fromJson(json["object"]),
+        object: ObjectPublicInfoUser.fromJson(json["object"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -27,7 +27,7 @@ class PublicInfoUserResponse {
       };
 }
 
-class Object {
+class ObjectPublicInfoUser {
   final String uid;
   final dynamic uidType;
   final String email;
@@ -45,7 +45,7 @@ class Object {
   final DateTime lastActivityAt;
   List<String> tags;
 
-  Object(
+  ObjectPublicInfoUser(
       {required this.uid,
       required this.uidType,
       required this.email,
@@ -64,7 +64,7 @@ class Object {
       required this.tags,
       });
 
-  factory Object.fromJson(Map<String, dynamic> json) => Object(
+  factory ObjectPublicInfoUser.fromJson(Map<String, dynamic> json) => ObjectPublicInfoUser(
         uid: json["uid"],
         uidType: json["uid_type"],
         email: json["email"],

@@ -1,5 +1,5 @@
 import 'package:app_template/config/router/app_router_notifier.dart';
-import 'package:app_template/presentation/modules/screens.dart';
+import 'package:app_template/presentation/modules/modules.dart';
 import 'package:app_template/presentation/providers/auth/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';

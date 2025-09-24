@@ -1,8 +1,7 @@
 
 
-import 'package:app_template/config/local_notifications/local_notifications.dart';
-import 'package:app_template/config/router/app_router.dart';
-import 'package:app_template/config/theme/app_theme.dart';
+
+import 'package:app_template/config/config.dart';
 import 'package:app_template/presentation/bloc/notifications/notifications_bloc.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';

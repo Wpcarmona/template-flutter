@@ -1,15 +1,11 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
+import 'package:app_template/infraestructure/infraestructure.dart';
+import 'package:app_template/presentation/presentation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app_template/config/constants/app_keys.dart';
-import 'package:app_template/config/constants/environment.dart';
-import 'package:app_template/domain/entities/entities.dart';
-import 'package:app_template/domain/repositories/ranking_repository/ranking_repository.dart';
-import 'package:app_template/infraestructure/repositories/ranking_repository/ranking_repository.dart';
-import 'package:app_template/presentation/infraestructure/services/key_value_storage_service.dart';
-import 'package:app_template/presentation/infraestructure/services/key_value_storage_service_impl.dart';
-import 'package:app_template/presentation/utils/dio_exception_handler.dart';
+import 'package:app_template/config/config.dart';
+import 'package:app_template/domain/domain.dart';
+import 'package:dio/dio.dart';
 
 enum RankingStatus {
   initial,

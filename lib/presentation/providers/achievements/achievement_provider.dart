@@ -1,15 +1,12 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
+import 'package:app_template/infraestructure/infraestructure.dart';
+import 'package:app_template/presentation/presentation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:app_template/domain/domain.dart';
+import 'package:app_template/config/config.dart';
 import 'package:intl/intl.dart';
-import 'package:app_template/config/constants/app_keys.dart';
-import 'package:app_template/domain/entities/achievements/get_achievements.dart';
-import 'package:app_template/domain/repositories/achievements_repository/achievements_repository.dart';
-import 'package:app_template/infraestructure/repositories/achievements_repository/achievement_repository.dart';
-import 'package:app_template/presentation/infraestructure/services/key_value_storage_service.dart';
-import 'package:app_template/presentation/infraestructure/services/key_value_storage_service_impl.dart';
-import 'package:app_template/presentation/utils/dio_exception_handler.dart';
+import 'package:dio/dio.dart';
 
 enum AchievementStatus {
   initial,

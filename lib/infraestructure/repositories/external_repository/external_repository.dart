@@ -26,4 +26,9 @@ class ExternalRepositoryImpl extends ExternalRepository {
     return datasource.getExternalFormField(token: token, externalActionId: externalActionId);
   }
   
+  @override
+  Future<List<ExternalFormList>> getExternalFormListByCategory({required String token, required String category}) {
+    return datasource.getExternalFormListByCategory(token: token, category: category);
+  }
+  
 }

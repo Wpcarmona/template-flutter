@@ -31,4 +31,6 @@ abstract class AuthDatasource {
     String? name,
     String? phone
   });
+
+  Future<ResetPassWordValidate> resetPassWordValidate({required String email});
 }

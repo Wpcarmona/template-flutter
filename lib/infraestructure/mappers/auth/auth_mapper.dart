@@ -1,66 +1,68 @@
 
-
-import 'package:app_template/infraestructure/infraestructure.dart' hide Participant;
+import 'package:app_template/infraestructure/models/auth/auth.dart';
 import 'package:app_template/domain/domain.dart';
 
 class AuthMapper {
   static Login loginToEntity(LoginResponse login) => Login(
-    ok: login.ok,
-    token: login.token,
-    participant: Participant(
-      id: login.participant.id, 
-      email: login.participant.email, 
-      name: login.participant.name, 
-      avatar: login.participant.avatar,
-      uid: login.participant.uid, 
-      uidType: login.participant.uidType, 
-      state: login.participant.state
-      ),
-      message: login.message
-  );
+      ok: login.ok,
+      token: login.token,
+      participant: Participant(
+          id: login.participant.id,
+          email: login.participant.email,
+          name: login.participant.name,
+          avatar: login.participant.avatar,
+          uid: login.participant.uid,
+          uidType: login.participant.uidType,
+          state: login.participant.state),
+      message: login.message);
 
-  static Logout logoutToEntity(LogoutResponse logout) => Logout(
-    ok: logout.ok, message: logout.message);
+  static Logout logoutToEntity(LogoutResponse logout) =>
+      Logout(ok: logout.ok, message: logout.message);
 
   static Register registerToEntity(CreateUserResponse register) => Register(
-    ok: register.ok,
-    token: register.token,
-    participant: Participant(
-      id: register.participantData.id, 
-      email: register.participantData.email, 
-      name: register.participantData.name, 
-      avatar: register.participantData.avatar,
-      uid: register.participantData.uid, 
-      uidType: register.participantData.uidType, 
-      state: register.participantData.state
-      ),
-    message: register.message
-  );
+      ok: register.ok,
+      token: register.token,
+      participant: Participant(
+          id: register.participantData.id,
+          email: register.participantData.email,
+          name: register.participantData.name,
+          avatar: register.participantData.avatar,
+          uid: register.participantData.uid,
+          uidType: register.participantData.uidType,
+          state: register.participantData.state),
+      message: register.message);
 
-  static SendVerifyPhone sendVerifyPhoneToEntity(SendVerifyPhoneResponse sendVerifyPhone) => 
-  SendVerifyPhone(ok: sendVerifyPhone.ok, message: sendVerifyPhone.message);
+  static SendVerifyPhone sendVerifyPhoneToEntity(
+          SendVerifyPhoneResponse sendVerifyPhone) =>
+      SendVerifyPhone(ok: sendVerifyPhone.ok, message: sendVerifyPhone.message);
 
-  static VerifyPhone verifyPhoneToEntity(VerifyPhoneResponse verifyPhone) => 
-  VerifyPhone(ok: verifyPhone.ok, message: verifyPhone.message);
+  static VerifyPhone verifyPhoneToEntity(VerifyPhoneResponse verifyPhone) =>
+      VerifyPhone(ok: verifyPhone.ok, message: verifyPhone.message);
 
-  static ResetPassword resetPasswordToEntity(ResetPasswordResponse resetPassword) =>
-  ResetPassword(ok: resetPassword.ok, message: resetPassword.message);
+  static ResetPassword resetPasswordToEntity(
+          ResetPasswordResponse resetPassword) =>
+      ResetPassword(ok: resetPassword.ok, message: resetPassword.message);
 
-  static UpdatePassword updatePasswordToEntity(UpdatePasswordResponse updatePassword) =>
-  UpdatePassword(ok: updatePassword.ok, message: updatePassword.message);
+  static UpdatePassword updatePasswordToEntity(
+          UpdatePasswordResponse updatePassword) =>
+      UpdatePassword(ok: updatePassword.ok, message: updatePassword.message);
 
   static UpdateUser updateUserToEntity(UpdateUserResponse updateUser) =>
-  UpdateUser(
-    ok: updateUser.ok, 
-    message: updateUser.message, 
-    participant: Participant(
-      id: updateUser.participantData.id, 
-      email: updateUser.participantData.email, 
-      name: updateUser.participantData.name, 
-      avatar: updateUser.participantData.avatar, 
-      uid: updateUser.participantData.uid, 
-      uidType: updateUser.participantData.uidType, 
-      state: updateUser.participantData.state,));
+      UpdateUser(
+          ok: updateUser.ok,
+          message: updateUser.message,
+          participant: Participant(
+            id: updateUser.participantData.id,
+            email: updateUser.participantData.email,
+            name: updateUser.participantData.name,
+            avatar: updateUser.participantData.avatar,
+            uid: updateUser.participantData.uid,
+            uidType: updateUser.participantData.uidType,
+            state: updateUser.participantData.state,
+          ));
 
-
+  static ResetPassWordValidate resetPassWordValidateToEntity(
+          ValidateChannelResponse resetPassWordValidate) =>
+      ResetPassWordValidate(
+          ok: resetPassWordValidate.ok, message: resetPassWordValidate.message);
 }

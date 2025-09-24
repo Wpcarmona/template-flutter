@@ -19,4 +19,6 @@ abstract class ExternalDatasource{
     required Map<String, dynamic> properties,
   });
 
+  Future<List<ExternalFormList>> getExternalFormListByCategory({required String token, required String category});
+
 }
